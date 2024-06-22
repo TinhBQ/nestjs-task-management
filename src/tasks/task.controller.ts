@@ -15,6 +15,8 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { GetTaskFilterDto } from './dto/get-task-filter.dto';
 import { UpdateTaskStatusDto } from './dto/update-task-status.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { GetUser } from 'src/auth/get-user.decorator';
+import { User } from 'src/auth/user.entity';
 
 @Controller('task')
 @UseGuards(AuthGuard())
@@ -32,8 +34,11 @@ export class TaskController {
   }
 
   @Post()
-  creatTask(@Body() reateTaskDto: CreateTaskDto): Promise<Task> {
-    return this.taskService.createTask(reateTaskDto);
+  creatTask(
+    @Body() reateTaskDto: CreateTaskDto,
+    @GetUser() user: User,
+  ): Promise<Task> {
+    return this.taskService.createTask(reateTaskDto, user);
   }
 
   @Delete('/:id')
